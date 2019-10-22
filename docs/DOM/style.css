@@ -1,0 +1,41 @@
+body {
+	margin: 0;
+	background: #B80303;
+	overflow: hidden;
+}
+
+.takki {
+	text-align: center;
+	width: 6em;
+	border: 1px solid #eee;
+	display: inline-block;
+	margin: 5px;
+	background: red;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	font-family: 'Arial', sans-serif;
+}
+
+.takki:hover {
+	background: darkred;
+}
+
+#content {
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	color: white;
+	text-align: center;
+	font-family: "Times New Roman";
+}
+
+#quiz {
+	color: black;
+	background: #eee;
+	padding: 3em;
+}
+
+.mynd {
+	border: 5px solid brown;
+}
