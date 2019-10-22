@@ -43,8 +43,9 @@ function setjaSpurningu(index){
 		quiz.appendChild(document.createElement('br'));
 	}
 	
+	let takkar = [];
 
-	
+	let virkt = true;
 
 	let svor = spurningar[index].svor;
 
@@ -56,22 +57,32 @@ function setjaSpurningu(index){
 
 		let smella = function(e){
 			takki.removeEventListener('click', smella);
+			if(!virkt)
+				return;
+			takki.style.background = "#3d0000";
+			takkar[spurningar[index].rett].style.background = "lime";
+			virkt = false;
 			if(i == spurningar[index].rett){
 				stig+=1;
 				breytaStigatoflu();
 			}
-			console.log("Þú smelltir á " + svor[i]);
-			if(spurningar.length <= index+1){
-				// hérna á leikurinn að enda
-				quiz.innerHTML = "<h3>Leik lokið</h3>";
+			setTimeout(function(){
+				
+				console.log("Þú smelltir á " + svor[i]);
+				if(spurningar.length <= index+1){
+					// hérna á leikurinn að enda
+					quiz.innerHTML = "<h3>Leik lokið</h3>";
 
-			} else {
-				setjaSpurningu(index+1);
-			}
+				} else {
+					setjaSpurningu(index+1);
+				}
+			}, 3000);
+
+			
 		}
 
 		takki.addEventListener('click', smella);
-
+		takkar.push(takki);
 		takki.appendChild(svar);
 		quiz.appendChild(takki);
 	}
