@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+</head>
+<body>
+
+  <script>
+    // Hér búum við til array lista
+    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+
+    // Margir myndu halda að þetta væri afritun, en þetta er bara afritun á tilvísunninni á listanum þannig að ef við breytum
+    // team þá breytist players líka
+    const team = players;
+
+    console.log(players, team);
+    
+    // Hér afritum við gildið á breytunni og setjum á annan stað í minninu
+    const team2 = players.slice();
+
+    // Hér búum við til nýjan array lista og setjum inn öll gildin úr players í team3
+    const team3 = [].concat(players);
+
+    // or use the new ES6 Spread
+    const team4 = [...players];
+    team4[3] = 'heeee hawww';
+    console.log(team4);
+
+    const team5 = Array.from(players);
+
+    // Hérna búum við til Object
+    const person = {
+      name: 'Wes Bos',
+      age: 80
+    };
+
+    // Ef við gerum const cap2 = person; þá hefur cap2 sömu tilvísun á gildin og person, sem þýðir að ef þú breytir cap2 þá breytist person líka á sama hátt, og öfugt
+    const cap2 = Object.assign({}, person, { number: 99, age: 12 });
+    console.log(cap2);
+
+    // Þetta afritar gildin og geymir þau annar staðar í minninu svo ef við breytum cap3 þá breytist cap2 ekki
+    const cap3 = {...cap2};
+
+    const wes = {
+      name: 'Wes',
+      age: 100,
+      social: {
+        twitter: '@wesbos',
+        facebook: 'wesbos.developer'
+      }
+    };
+
+    // console.clear() hreinsar allt output úr console
+    console.clear();
+    console.log(wes);
+
+    // Object.assign({}, obj) afritar object og geymir það annar staðar í minninu svo ef þú breytir öðru objectinu þá breytist hitt ekki 
+    const dev = Object.assign({}, wes);
+
+    // JSON.parse breytir JSON í object eða array (fer eftir hvernig json'ið er skrifað)
+    const dev2 = JSON.parse(JSON.stringify(wes));
+    
+
+  </script>
+
+</body>
+</html>
