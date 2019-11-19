@@ -1,0 +1,68 @@
+body {
+	background: black;
+	color: white;
+	width: 100%;
+	overflow-x: hidden;
+	text-align: center;
+	font-family: 'Roboto';
+}
+
+.nav {
+	margin-top: 1em;
+	width: 100%;
+}
+
+#searchbar *{
+	display: inline;
+}
+
+#leitartakki {
+	background: #FF2D21;
+	border: 1px solid #DA2D21;
+	height: 100%;
+	padding: 12px 10px 10px 10px;
+	font-size: 1.4em;
+	cursor: pointer;
+}
+
+#search input {
+	padding: 10px;
+	font-size: 1.4em;
+}
+
+#leita {
+	
+	
+}
+
+.concert h4{
+	margin-top: -1em;
+	max-width: 250px;
+}
+
+#concerts *{
+	text-align: center;
+	display: inline-block;
+}
+
+
+.mynd {
+	width: 285px;
+	height: 190px;
+	/*background-size: cover;
+	background-color: red;*/
+	margin: 10px;
+	cursor: pointer;
+
+	transition: background .5s;
+}
+
+.info {
+	width: 100%;
+	background-color: rgba(0,0,0,.6);
+	margin: 6px 0;
+}
+
+#slider {
+	width: 10em;
+}
