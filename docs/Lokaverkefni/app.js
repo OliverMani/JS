@@ -70,9 +70,7 @@ function mouseExit(event){
 // Býr til íslenska dagsetningu á tónleikum
 function parseTime(time){
 	let day = time.substring(0, time.indexOf('T'));
-	
 	let split = day.split('-');
-
 	return split[2] + ". " + days[parseInt(split[1])-1] + ' ' + split[0];
 }
 
@@ -86,14 +84,15 @@ function filterConcerts(filter, from='', to=''){
 	if(to == '' || isNaN(to))
 		to = Math.max(...dates);
 
-	console.log("FROM:",from,"TO:",to, "FROM NAN:", isNaN(from), "TO NAN:", isNaN(to));
+	
 
 	for(let i = 0; i < concerts.length; i++){
 		let textdate = concerts[i].getElementsByClassName('info')[1].innerHTML.replace(".","");
 		let datelist = textdate.split(" ");
 		let format = datelist[2] + '-' + (days.indexOf(datelist[1])+1) + '-' + datelist[0] + "T20:00:00";
 		let date = new Date(format).getTime();
-		console.log("Date:", date,"from:",from,"to:",to, "datelist:",datelist, "format:", format, "check:", (date >= from && date <= to));
+		
+		// Hér felum við þá tónleika sem eiga ekki við í leitarskilyrðum, t.d birtum bara það sem er í leitartextanum, og í tímabilinu sem þú velur, nema ef það sé hreinsað út
 		if(((concerts[i].innerHTML.toLowerCase().includes(filter.toLowerCase()) || filter == '') && ((date >= from && date <= to)) || (isNaN(to) || isNaN(from)))){
 			concerts[i].style.display = "inline-block";
 		} else {
@@ -101,15 +100,15 @@ function filterConcerts(filter, from='', to=''){
 		}
 	}
 
-	return false;
+	return false; // við gerum return false fyrir HTML svo við refresh'um ekki óvart síðuna
 }
 
 // Start fallið
 function init(data){
 
 
-
-	let sorted = makeMyOwnDataStructure(data); // Hérna erum við að kalla á fall sem ég gerði svo sömu tónleikarnir birtast ekki tvisvar
+	// Hérna erum við að kalla á fall sem ég gerði svo sömu tónleikarnir birtast ekki tvisvar
+	let sorted = makeMyOwnDataStructure(data); 
 
 	allData = sorted;
 
