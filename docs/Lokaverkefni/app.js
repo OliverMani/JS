@@ -11,15 +11,14 @@ searchbar.value = '';
 const days = ["Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember"];
 
 
-
+// Start'ar flatpickr library'inu, það er notað til að velja dagsetningar
 function formatDate(){
-	document.getElementById('fromdate').value = "";
-	document.getElementById('todate').value = "";
 
-	console.log("flatpickr");
+	// Þetta er til að fá face format á síðustu tónleikunum sem eru í boði
 	let maxdate = new Date(Math.max(...dates));
 	let dateformat = maxdate.getDate() + ". " + (maxdate.getMonth() + 1) + ". " + maxdate.getFullYear();
-	console.log("MAX DATE:", dateformat, "DATE: ", maxdate)
+
+	// Eftirfarandi stillir pluginið
 	flatpickr('#fromdate', {
 		enableTime: false,
 		dateFormat: 'd. m. Y',
