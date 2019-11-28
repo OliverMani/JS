@@ -2,6 +2,11 @@
 <html>
 <head>
 	<title></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+
 	<link rel="stylesheet" type="text/css" href="style.css">
 	
 	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"> 
@@ -13,8 +18,8 @@
 		<form id="search" onsubmit="return false;">
 			<div id="searchbar">
 				<input type="text" name="search" placeholder="Leita" id="leita">
-				Frá: <input type="date" id="fromdate">
-				Til: <input type="date" id="todate">
+				Frá: <input type="text" class="flatpickr flatpickr-input active" placeholder="Veldu dagsetningu..." readonly id="fromdate">
+				Til: <input type="text" class="flatpickr flatpickr-input active" placeholder="Veldu dagsetningu..." readonly id="todate">
 			</div>
 			
 		</form>
