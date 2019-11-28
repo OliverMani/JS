@@ -6,6 +6,7 @@ let dates = [];
 
 const days = ["Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember"];
 
+// Þetta fall breytir objectinu sem við fáum í annað object til að einfalda fyrir okkur vinnsluna
 function makeMyOwnDataStructure(data){
 	let names = [];
 	let result = [];
@@ -36,6 +37,7 @@ function makeMyOwnDataStructure(data){
 	return result;
 }
 
+// Þegar músin snertir eitthvað
 function mouseEnter(event){
 	if(event.target.className != "mynd"){
 		return;
@@ -49,6 +51,7 @@ function mouseEnter(event){
 	}
 }
 
+// Þegar músin fer út úr boxi
 function mouseExit(event){
 	if(event.target.className != "mynd"){
 		return;
@@ -64,6 +67,7 @@ function mouseExit(event){
 	}
 }
 
+// Býr til íslenska dagsetningu á tónleikum
 function parseTime(time){
 	let day = time.substring(0, time.indexOf('T'));
 	
@@ -72,15 +76,17 @@ function parseTime(time){
 	return split[2] + ". " + days[parseInt(split[1])-1] + ' ' + split[0];
 }
 
+// Finnur tónleika sem innihalda það sem þú leitar að í nafninu
 function filterConcerts(filter, from='', to=''){
 	let concerts = table.getElementsByClassName('concert');
 
-	if(from == '')
+	// Hér þurfum við að nota isNaN fallið í staðinn fyrir að gera from == NaN, af því að eitthvað fall sem heitir isNaN virkar
+	if(from == '' || isNaN(from))
 		from = Math.min(...dates);
-	if(to == '')
+	if(to == '' || isNaN(to))
 		to = Math.max(...dates);
 
-	console.log("FROM:",from,"TO:",to)
+	console.log("FROM:",from,"TO:",to, "FROM NAN:", isNaN(from), "TO NAN:", isNaN(to));
 
 	for(let i = 0; i < concerts.length; i++){
 		let textdate = concerts[i].getElementsByClassName('info')[1].innerHTML.replace(".","");
@@ -88,7 +94,7 @@ function filterConcerts(filter, from='', to=''){
 		let format = datelist[2] + '-' + (days.indexOf(datelist[1])+1) + '-' + datelist[0] + "T20:00:00";
 		let date = new Date(format).getTime();
 		console.log("Date:", date,"from:",from,"to:",to, "datelist:",datelist, "format:", format, "check:", (date >= from && date <= to));
-		if((concerts[i].innerHTML.toLowerCase().includes(filter.toLowerCase()) || filter == '') && ((date >= from && date <= to) || to == NaN || from == NaN)){
+		if(((concerts[i].innerHTML.toLowerCase().includes(filter.toLowerCase()) || filter == '') && ((date >= from && date <= to)) || (isNaN(to) || isNaN(from)))){
 			concerts[i].style.display = "inline-block";
 		} else {
 			concerts[i].style.display = "none";
@@ -98,31 +104,35 @@ function filterConcerts(filter, from='', to=''){
 	return false;
 }
 
+// Start fallið
 function init(data){
 
 
 
 	let sorted = makeMyOwnDataStructure(data); // Hérna erum við að kalla á fall sem ég gerði svo sömu tónleikarnir birtast ekki tvisvar
-	console.log(sorted);
+
 	allData = sorted;
 
+	// Hér erum við eiginlega bara að ná í elements og stilla þau
 	let searchbar = document.getElementById('leita');
 	searchbar.value = '';
 
 	let fromdate = document.getElementById('fromdate');
 	let todate = document.getElementById('todate');
-
+	// Við búum til fall og látum breytu vísa í það, af því að 3 mismunandi listeners eiga að kalla á sama fallið
+	// Þetta filter'ar sjálfkrafa svo við þurfum ekki að hafa leitartakka hjá okkur
 	let refresh = function(){
 		filterConcerts(searchbar.value, new Date(fromdate.value).getTime(), new Date(todate.value).getTime());
 	}
 
+	// listeners
 	document.getElementById('search').addEventListener('input', refresh);
 	fromdate.addEventListener('input', refresh);
 	todate.addEventListener('input', refresh);
 
 
 
-
+	// Hérna erum við að setja upp alla tónleikana
 	for(let i = 0; i < sorted.length; i++){
 		let obj = sorted[i];
 
@@ -170,32 +180,32 @@ function init(data){
 	}
 }
 
-// Sækir gögnin
-function postInit(url, request){
+// Við viljum byrja á því að ná í gögnin sem við þurfum
+function preInit(url, request){
+	// Ef við setjum ekkert url þá getum við hvort sem er ekkert gert
 	if(url == undefined)
 		return;
+	// Tengist web servernum
 	let con = new XMLHttpRequest();
 	let json = undefined;
 	con.open("GET", url, true);
 
 	con.onreadystatechange = function(){
 		if(con.readyState === 4 && con.status == 200){
+			// Breytum gögnunum í object
+
 			json = JSON.parse(con.responseText);
-			console.log();
+			// Hérna byrjar vinnslan á gögnunum
 			init(json);
 		} else {
 			json = "error";
 		}
 	};
 
+	// sendum request'ið
 	con.send();
 
 }
 
-// Undirbýr HTML
-function preInit(){
-
-}
-
-preInit();
-postInit("https://apis.is/concerts");
+// Hér byrjum við með því að kalla á fallið sem á að sækja gögnin
+preInit("https://apis.is/concerts");
