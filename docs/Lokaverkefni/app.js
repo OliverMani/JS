@@ -3,18 +3,62 @@
 let table = document.getElementById('concerts');
 let allData = undefined;
 let dates = [];
+let from = undefined;
+let to = undefined;
+let searchbar = document.getElementById('leita');
+searchbar.value = '';
 
 const days = ["Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember"];
+
+
+
+function formatDate(){
+	document.getElementById('fromdate').value = "";
+	document.getElementById('todate').value = "";
+
+	console.log("flatpickr");
+	let maxdate = new Date(Math.max(...dates));
+	let dateformat = maxdate.getDate() + ". " + (maxdate.getMonth() + 1) + ". " + maxdate.getFullYear();
+	console.log("MAX DATE:", dateformat, "DATE: ", maxdate)
+	flatpickr('#fromdate', {
+		enableTime: false,
+		dateFormat: 'd. m. Y',
+		minDate: "today",
+		defaultDate: "today",
+		maxDate: maxdate,
+		onChange: function(selectedDates){
+			from = selectedDates[0].getTime();
+			refresh();
+		}
+	});
+
+	flatpickr('#todate', {
+		enableTime: false,
+		dateFormat: 'd. m. Y',
+		minDate: "today",
+		maxDate: maxdate,
+		defaultDate: maxdate,
+		onChange: function(selectedDates){
+			to = selectedDates[0].getTime();
+			refresh();
+		}
+	});
+}
+
+
+
 
 // Þetta fall breytir objectinu sem við fáum í annað object til að einfalda fyrir okkur vinnsluna
 function makeMyOwnDataStructure(data){
 	let names = [];
 	let result = [];
+	// Fer í gegnum allt object'ið (gögnin)
 	for(let i = 0; i < data.results.length; i++){
 		let chunk = data.results[i];
 		dates.push(new Date(chunk.dateOfShow).getTime());
+		// Kemur í veg fyrir að sömu tónleikar birtast tvisvar, í staðinn viljum við setja margar dagsetningar á sömu tónleika
 		if(names.includes(chunk.eventDateName)){
-			// þurfum þarna að finna event
+			// þurfum þarna að finna viðburð
 			for(let x = 0; x < result.length; x++){
 				if(chunk.eventDateName == result[x].name){
 					result[x].date.push(chunk.dateOfShow);
@@ -103,6 +147,10 @@ function filterConcerts(filter, from='', to=''){
 	return false; // við gerum return false fyrir HTML svo við refresh'um ekki óvart síðuna
 }
 
+function refresh(){
+	filterConcerts(searchbar.value, from, to);
+}
+
 // Start fallið
 function init(data){
 
@@ -113,21 +161,18 @@ function init(data){
 	allData = sorted;
 
 	// Hér erum við eiginlega bara að ná í elements og stilla þau
-	let searchbar = document.getElementById('leita');
-	searchbar.value = '';
+	
 
-	let fromdate = document.getElementById('fromdate');
-	let todate = document.getElementById('todate');
+	//let fromdate = document.getElementById('fromdate');
+	//let todate = document.getElementById('todate');
 	// Við búum til fall og látum breytu vísa í það, af því að 3 mismunandi listeners eiga að kalla á sama fallið
 	// Þetta filter'ar sjálfkrafa svo við þurfum ekki að hafa leitartakka hjá okkur
-	let refresh = function(){
-		filterConcerts(searchbar.value, new Date(fromdate.value).getTime(), new Date(todate.value).getTime());
-	}
+	
 
 	// listeners
 	document.getElementById('search').addEventListener('input', refresh);
-	fromdate.addEventListener('input', refresh);
-	todate.addEventListener('input', refresh);
+	//fromdate.addEventListener('input', refresh);
+	//todate.addEventListener('input', refresh);
 
 
 
@@ -196,6 +241,8 @@ function preInit(url, request){
 			json = JSON.parse(con.responseText);
 			// Hérna byrjar vinnslan á gögnunum
 			init(json);
+
+			formatDate();
 		} else {
 			json = "error";
 		}
@@ -205,6 +252,7 @@ function preInit(url, request){
 	con.send();
 
 }
+
 
 // Hér byrjum við með því að kalla á fallið sem á að sækja gögnin
 preInit("https://apis.is/concerts");
